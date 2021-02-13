@@ -78,3 +78,4 @@ def initial_by_array(jpg_paths,png_paths,shape):
         x=np.concatenate((x,temp_x),axis=0)#(num,128,128,3)=(num1,128,128,3)+(num2,128,128,3)
         y_=np.concatenate((y_,temp_y_),axis=0)#(num,128,128,1)=(num1,128,128,1)+(num2,128,128,1)
     return x,y_
+print(123)
