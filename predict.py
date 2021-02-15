@@ -1,4 +1,5 @@
 from unet import *
+from color_transfer import color_transfer
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
@@ -18,16 +19,39 @@ def show_pridicr(jpg_img,predict_alpha):
     plt.title("predict Alpha img")
     plt.axis("off")
     plt.show()
-
-jpg_path='C:/Users/Lenovo/Desktop/test.jpg'
-def show_ppp(jpg_path):
-    jpg = cv2.imread(jpg_path, cv2.IMREAD_UNCHANGED)  # 根据路径读取jpg文件
-    jpg_img = cv2.cvtColor(jpg[:, :, :3], cv2.COLOR_BGR2RGB)  # imread读取的文件为bgr通道顺序，将通道顺序转变为rgb
-    jpg_img = cv2.resize(jpg_img, (128,128))  # 调整图片大小
+def change_bg(jpg,bg,x_offset=0,y_offset=0):
+    size = jpg.shape
+    w = size[1]  # 宽度
+    h = size[0]  # 高度
+    bg = cv2.cvtColor(bg[:, :, :3], cv2.COLOR_BGR2RGB)
+    bg=bg[0:h,x_offset:x_offset+w,0:3]#通过切片获得我们想要的当前背景
+    #print(bg.shape)
+    jpg = cv2.cvtColor(jpg[:, :, :3], cv2.COLOR_BGR2RGB)
+    jpg_img = cv2.resize(jpg, (128,128))  # 调整图片大小
     jpg_img = jpg_img / 255.0  # 数据归一化
     pred_img = jpg_img[tf.newaxis, ...]
-    pred_mask = np.squeeze(model.predict(pred_img))
-    pred_mask = tf.argmax(pred_mask, axis=2)
-    show_pridicr(jpg_img, pred_mask)
-
-show_ppp(jpg_path)
+    #print('start pridct')
+    pred_mask = np.squeeze(model.predict(pred_img)) #去除条目为1的维度
+    #print('done pridict')
+    pred_mask = tf.argmax(pred_mask, axis=2)#得到预测结果较大的条目
+    pred_mask = np.array(pred_mask,dtype=np.uint8)#将结果从tf.tensor转为np的数组模式,以便后面使用cv2里面的函数
+    pred_mask = cv2.resize(pred_mask,(w,h))#将预测结果转化为原始图像大小，resize函数第二个参数为图像大小，先宽后高
+    pred_mask = pred_mask*255.0 #将0，1转化为0，255
+    pred_mask = cv2.blur(pred_mask, (5, 5)) #做平均值滤波，使得抠图边缘平滑一些
+    pred_mask = pred_mask / 255.0  # 将0，255转化为0，1
+    pred_mask_jpg = np.zeros_like(jpg)  #将单通道的mask转为3通道的mask，其中每个通道都为原始mask，这样是为了后面使用图像乘法
+    pred_mask_jpg[:, :, 0] = pred_mask
+    pred_mask_jpg[:, :, 1] = pred_mask
+    pred_mask_jpg[:, :, 2] = pred_mask
+    #print(jpg.shape)
+    #print(pred_mask.shape)
+    #print(pred_mask_jpg.shape)
+    #print('done change')
+    bg_mask_jpg = np.ones_like(jpg) #获得3通道的纯数字1矩阵
+    bg_mask_jpg = cv2.subtract(bg_mask_jpg,pred_mask_jpg)#与pred_mask相见，得到背景mask的3通道矩阵
+    #将图像和mask图像相乘得到对应的图像后相加得到最终图像
+    peo=cv2.multiply(jpg,pred_mask_jpg)
+    background=cv2.multiply(bg,bg_mask_jpg)
+    peo=color_transfer(background,peo)
+    I=cv2.add(peo,background)
+    return I
