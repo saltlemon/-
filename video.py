@@ -1,6 +1,8 @@
 import cv2
+from vidstab.VidStab import VidStab
 from predict import *
 def magic(videoPath,bg_path):
+    stabilizer = VidStab()
     cap = cv2.VideoCapture(videoPath)
     fps = 30  # 保存视频的FPS，可以适当调整
     # 可以用(*'DVIX')或(*'X264'),如果都不行先装ffmepg: sudo apt-get install ffmepg
@@ -26,5 +28,5 @@ def magic(videoPath,bg_path):
         print('视频打开失败！')
     videoWriter.release()
 videoPath='C:/Users/Lenovo/Desktop/test2.mp4'
-bg_path='C:/Users/Lenovo/Desktop/background.jpg'
+bg_path='C:/Users/Lenovo/Desktop/bg.jpg'
 magic(videoPath,bg_path)

@@ -1,5 +1,6 @@
 from unet import *
-from color_transfer import color_transfer
+from transfer import *
+from color import *
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
@@ -8,6 +9,10 @@ model = unet_model(OUTPUT_CHANNELS)
 checkpoint_save_path = "./checkpoint/network.ckpt"
 model.load_weights(checkpoint_save_path)
 
+def image_stats(image):
+    (r, g, b) = cv2.split(image)
+    (rMean,gMean,bMean)=(r.mean(),g.mean(),b.mean())
+    return (rMean, gMean, bMean)
 def show_pridicr(jpg_img,predict_alpha):
     plt.figure(figsize=(10, 8))
     plt.subplot(1, 2, 1)
@@ -43,15 +48,12 @@ def change_bg(jpg,bg,x_offset=0,y_offset=0):
     pred_mask_jpg[:, :, 0] = pred_mask
     pred_mask_jpg[:, :, 1] = pred_mask
     pred_mask_jpg[:, :, 2] = pred_mask
-    #print(jpg.shape)
-    #print(pred_mask.shape)
-    #print(pred_mask_jpg.shape)
-    #print('done change')
     bg_mask_jpg = np.ones_like(jpg) #获得3通道的纯数字1矩阵
     bg_mask_jpg = cv2.subtract(bg_mask_jpg,pred_mask_jpg)#与pred_mask相见，得到背景mask的3通道矩阵
     #将图像和mask图像相乘得到对应的图像后相加得到最终图像
     peo=cv2.multiply(jpg,pred_mask_jpg)
     background=cv2.multiply(bg,bg_mask_jpg)
-    peo=color_transfer(background,peo)
+    I=hsv_change(peo,background,jpg)
+    peo=cv2.multiply(I,pred_mask_jpg)
     I=cv2.add(peo,background)
     return I

@@ -1,8 +1,8 @@
 import tensorflow as tf
 from tensorflow_examples.models.pix2pix import pix2pix
 
-def unet_model(output_channels):
-    base_model = tf.keras.applications.MobileNetV2(input_shape=[128, 128, 3], include_top=False)
+def unet_model(output_channels,shape):
+    base_model = tf.keras.applications.MobileNetV2(input_shape=[shape[0], shape[1], 3], include_top=False)
 
     # 使用这些层的激活设置
     layer_names = [
@@ -25,7 +25,7 @@ def unet_model(output_channels):
         pix2pix.upsample(128, 3),  # 16x16 -> 32x32
         pix2pix.upsample(64, 3),  # 32x32 -> 64x64
     ]
-    inputs = tf.keras.layers.Input(shape=[128, 128, 3])
+    inputs = tf.keras.layers.Input(shape=[shape[0], shape[1], 3])
     x = inputs
 
      # 在模型中降频取样

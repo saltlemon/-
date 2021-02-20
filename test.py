@@ -5,34 +5,24 @@ down_feature_list = []
 
 OUTPUT_CHANNELS = 2
 
-model = unet_model(OUTPUT_CHANNELS,(128,128))
+model = unet_model(OUTPUT_CHANNELS,(256,256))
 model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
 train_png_paths = ['E:/people\matting/1803151818/matting_00000000/',
                    'E:/people\matting/1803151818/matting_00000001/',
-                   'E:/people\matting/1803151818/matting_00000002/',
-                   'E:/people\matting/1803151818/matting_00000003/',
-                   'E:/people\matting/1803151818/matting_00000004/',
-                   'E:/people\matting/1803151818/matting_00000005/',
-                   'E:/people\matting/1803151818/matting_00000006/',
-                   'E:/people\matting/1803151818/matting_00000007/']
+                   ]
 train_jpg_paths = ['E:/people\clip_img/1803151818/clip_00000000/',
                    'E:/people\clip_img/1803151818/clip_00000001/',
-                   'E:/people\clip_img/1803151818/clip_00000002/',
-                   'E:/people\clip_img/1803151818/clip_00000003/',
-                   'E:/people\clip_img/1803151818/clip_00000004/',
-                   'E:/people\clip_img/1803151818/clip_00000005/',
-                   'E:/people\clip_img/1803151818/clip_00000006/',
-                   'E:/people\clip_img/1803151818/clip_00000007/']
-x_train, y_train=initial_by_array(train_jpg_paths,train_png_paths,(128,128))
+                   ]
+x_train, y_train=initial_by_array(train_jpg_paths,train_png_paths,(256,256))
 print("dataset:")
 print(x_train.shape)
 print(y_train.shape)
 
 test_png_path = 'E:/people\matting/1803151818/matting_00000008/'
 test_jpg_path = 'E:/people\clip_img/1803151818/clip_00000008/'
-x_test, y_test=initial(test_jpg_path,test_png_path,(128,128))
+x_test, y_test=initial(test_jpg_path,test_png_path,(256,256))
 print(x_test.shape)
 print(x_test[1].shape)
 print(y_test.shape)
@@ -69,7 +59,7 @@ class DisplayCallback(tf.keras.callbacks.Callback):
     show_predictions()
     print ('\nSample Prediction after epoch {}\n'.format(epoch+1))
 
-checkpoint_save_path = "./checkpoint/network.ckpt"
+checkpoint_save_path = "./checkpoint/ppp.ckpt"
 if os.path.exists(checkpoint_save_path + '.index'):
     print('-------------load the model-----------------')
     model.load_weights(checkpoint_save_path)

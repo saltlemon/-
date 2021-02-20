@@ -49,16 +49,16 @@ def generate(jpg_path,png_path,shape):
     return x,y_
 
 def initial(jpg_path,png_path,shape):
-    png_save_path = png_path + 'people_png_train.npy'
-    jpg_save_path = jpg_path + 'people_jpg_train.npy'
+    png_save_path = png_path + str(shape[0])+'x'+str(shape[1])+ 'people_png_train.npy'
+    jpg_save_path = jpg_path + str(shape[0])+'x'+str(shape[1])+'people_jpg_train.npy'
     if os.path.exists(png_save_path) and os.path.exists(jpg_save_path):#判断数据文件是否存在
         print('-------------Load Datasets-----------------')
         print('jpg_path:'+ jpg_path)
         print('png_path:' + png_path)
         x = np.load(jpg_save_path)#读取jpg文件
         y_ = np.load(png_save_path)#读取png文件
-        x = np.reshape(x, (len(x), 128, 128 ,3))#将数据转化为（num，128，128，3）
-        y_ = np.reshape(y_, (len(y_), 128, 128, 1))#将数据转化为（num，128，128，1）
+        x = np.reshape(x, (len(x), shape[0], shape[1] ,3))#将数据转化为（num，128，128，3）
+        y_ = np.reshape(y_, (len(y_), shape[0], shape[1], 1))#将数据转化为（num，128，128，1）
     else:
         print('-------------Generate Datasets-----------------')
         x, y_ = generate(jpg_path,png_path,shape)
@@ -78,4 +78,3 @@ def initial_by_array(jpg_paths,png_paths,shape):
         x=np.concatenate((x,temp_x),axis=0)#(num,128,128,3)=(num1,128,128,3)+(num2,128,128,3)
         y_=np.concatenate((y_,temp_y_),axis=0)#(num,128,128,1)=(num1,128,128,1)+(num2,128,128,1)
     return x,y_
-print(123)
