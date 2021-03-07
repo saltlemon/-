@@ -8,3 +8,4 @@
 
 数据集为https://blog.csdn.net/zziahgf/article/details/90706792
 神经网络为4层的unet网络，其中编码器部分使用了训练好的预编译模型
+![image](https://github.com/saltlemon/deepLearning/blob/master/555.png)
