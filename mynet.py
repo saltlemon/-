@@ -6,27 +6,27 @@ def myunet():
     x = tf.keras.layers.Conv2D(64, 3, padding="same", activation="relu")(inputs)
 
     # 下采样
-    x1 = tf.keras.layers.MaxPooling2D(padding="same")(x)  # 128*128*64
+    x1 = tf.keras.layers.MaxPooling2D(padding="same")(x)  
 
     # 卷积 第二部分
-    x1 = tf.keras.layers.Conv2D(128, 3, padding="same", activation="relu")(x1)
+    x1 = tf.keras.layers.Conv2D(128, 3, padding="same", activation="relu")(x1) # 128*128*128
 
     # 下采样
-    x2 = tf.keras.layers.MaxPooling2D(padding="same")(x1)  # 64*64*128
+    x2 = tf.keras.layers.MaxPooling2D(padding="same")(x1)  
 
     # 卷积 第三部分
-    x2 = tf.keras.layers.Conv2D(256, 3, padding="same", activation="relu")(x2)
+    x2 = tf.keras.layers.Conv2D(256, 3, padding="same", activation="relu")(x2) # 64*64*256
 
     # 下采样
-    x3 = tf.keras.layers.MaxPooling2D(padding="same")(x2)  # 32*32*256
+    x3 = tf.keras.layers.MaxPooling2D(padding="same")(x2)  
 
     # 卷积 第四部分
-    x3 = tf.keras.layers.Conv2D(512, 3, padding="same", activation="relu")(x3)
+    x3 = tf.keras.layers.Conv2D(512, 3, padding="same", activation="relu")(x3) # 32*32*512
 
     # 下采样
-    x4 = tf.keras.layers.MaxPooling2D(padding="same")(x3)  # 16*16*512
+    x4 = tf.keras.layers.MaxPooling2D(padding="same")(x3)  
     # 卷积  第五部分
-    x4 = tf.keras.layers.Conv2D(1024, 3, padding="same", activation="relu")(x4)
+    x4 = tf.keras.layers.Conv2D(1024, 3, padding="same", activation="relu")(x4) # 16*16*1024
 
 
     ## unet网络结构上采样部分
@@ -78,7 +78,7 @@ def myunet():
 
 def my_full_unet():
     #输入层
-    inputs=tf.keras.layers.Input(shape=(128,128,3))
+    inputs=tf.keras.layers.Input(shape=(256,256,3))
     x = tf.keras.layers.Conv2D(64, 3, padding="same", activation="relu")(inputs)
     x = tf.keras.layers.Conv2D(64, 3, padding="same", activation="relu")(x)
     # 下采样
