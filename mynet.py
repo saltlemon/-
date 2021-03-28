@@ -3,7 +3,7 @@ import tensorflow as tf
 def myunet():
     #输入层
     inputs=tf.keras.layers.Input(shape=(128,128,3))
-    x = tf.keras.layers.Conv2D(64, 3, padding="same", activation="relu")(inputs)
+    x = tf.keras.layers.Conv2D(64, 3, padding="same", activation="relu")(inputs) #256*256*64
 
     # 下采样
     x1 = tf.keras.layers.MaxPooling2D(padding="same")(x)  
