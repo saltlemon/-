@@ -3,7 +3,7 @@ from mynet import *
 
 model = myunet()
 model.compile(optimizer='adam',
-              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
               metrics=['accuracy'])
 train_png_paths = ['E:/people\matting/1803151818/matting_00000000/',
                    'E:/people\matting/1803151818/matting_00000001/',
