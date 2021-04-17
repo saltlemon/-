@@ -15,9 +15,6 @@ def hsv_change(peo,bg,img):
     (bg_h_mean, bg_s_mean, bg_v_mean) = state(bg)
     img = cv2.cvtColor(img[:, :, :3], cv2.COLOR_RGB2HSV)
     (h, s, v) = cv2.split(img)  # 色调，饱和度，亮度
-    alpha = 0.02#色调调整参数
-    h = cv2.add(h,alpha * (bg_h_mean - peo_h_mean))
-    h = h % 180#色调在opencv中的范围为0-180，改变色调后对180求模防止超出阈值
     bata=0.5#饱和度调整参数
     s = cv2.add(s, bata*(bg_s_mean - peo_s_mean))
     gama=0.3#亮度调整参数
